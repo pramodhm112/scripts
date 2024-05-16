@@ -1,0 +1,19 @@
+def issueKey = issue.key
+logger.info(issueKey)
+def fromStatusArray = ["Awaiting Assignment", "In Progress", "Completed - Open Findings", "Rejected", "In Review", "QA Audit", "Not Started"]
+def toStatusArray = ["Completed - Closed Findings", "Closed", "Closed - Awaiting External Closure", "Risk Accepted", "Awaiting Assignment", "Completed - Open Findings", "In Progress", "Rejected", "In Review", "QA Audit", "Not Started"]
+
+for (item in changelog.items) {
+	logger.info(item.field)
+	if ( item.field == "status" ) {
+        if ( (fromStatusArray.contains(item.fromString)) && (toStatusArray.contains(item.toString)) ) {
+            logger.info("Hello")
+        }
+        else {
+            logger.warn("Bye")
+        }
+    }
+    else {
+        logger.warn("Not a status change")
+    }
+}
