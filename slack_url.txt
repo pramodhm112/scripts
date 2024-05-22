@@ -1,0 +1,32 @@
+import groovy.json.JsonOutput
+import org.apache.http.client.methods.HttpPost
+import org.apache.http.entity.StringEntity
+import org.apache.http.impl.client.HttpClients
+
+def issueKey = issue.key
+
+// Define the endpoint URL
+def endpointUrl = "https://hooks.slack.com/services/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"
+// Create an HttpClient instance
+def httpClient = HttpClients.createDefault()
+// Create a POST request
+def postRequest = new HttpPost(endpointUrl)
+// Set the content type of the request
+postRequest.setHeader("Content-Type", "application/json")
+// Create the Slack message payload
+def message = "The following issue has been added to the current sprint https://tideaccount-sandbox-769.atlassian.net/${issue.key}"
+def slackPayload = [
+    text: message
+]
+// Convert the Slack payload to a JSON string
+def payloadJson = JsonOutput.toJson(slackPayload)
+// Create a StringEntity with the JSON payload
+def entity = new StringEntity(payloadJson, "UTF-8")
+// Set the JSON payload for the request
+postRequest.setEntity(entity)
+// Execute the request and get the response
+def response = httpClient.execute(postRequest)
+// Log the response if needed
+logger.warn(response.toString())
+// Close the HttpClient
+httpClient.close()
