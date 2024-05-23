@@ -1,0 +1,26 @@
+issueKey = issue.key
+logger.info(issueKey)
+def issueType = issue.fields.issuetype.name
+
+if (issueType == "Ovesights (sub task)") {
+    def updateResponse = put("/rest/api/3/issue/${issueKey}")
+        .queryString("overrideScreenSecurity", Boolean.TRUE)
+        .header('Content-Type', 'application/json')
+        .body([
+            fields: [
+                customfield_11632: [
+                    value: "New"
+                ],
+                customfield_11515: ["TPL"]
+            ]
+        ])
+        .asString()
+
+    if (updateResponse.status == 204) {
+        logger.info "Updated the Issue"
+    } else {
+        logger.error "Failed to update issue"
+    }
+} else {
+    logger.warn("Not an Ovesights (sub task)")
+}
