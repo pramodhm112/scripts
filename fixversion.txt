@@ -1,0 +1,84 @@
+// Add fix version for other components
+
+def issueKey = issue.key
+
+import groovy.json.JsonSlurper
+
+logger.info(issueKey)
+
+def changelogResponse = get('/rest/api/3/issue/' + issueKey + '/changelog?orderBy=-created')
+    .header('Content-Type', 'application/json')
+    .asObject(Map)
+
+def transitionedStatuses = ["In Progress", "Code Review", "Pre approved", "Ready for Testing", "In Testing", "Deploying", "Business Review", "Release Review", "Release Payload", "Deployed to Prod", "Manual Regression", "Done", "Closed", "Ready (ODR)", "Draft"]
+
+if (changelogResponse.status == 200) {
+    def changelog = changelogResponse.body.values as List<Map>
+
+    def latestTransition = null
+    def latestCreated = null
+
+    for (history in changelog) {
+        for (item in history.items) {
+            if (item.field == "status") {
+                def created = history.created
+                if (latestCreated == null || created > latestCreated) {
+                    def toStatus = item.toString
+                    if (transitionedStatuses.contains(toStatus)) {
+                        latestTransition = toStatus
+                        latestCreated = created
+                    }
+                }
+                break
+            }
+        }
+        if (latestTransition) {
+            break
+        }
+    }
+
+    if (latestTransition) {
+        logger.info "The latest workflow status transition is: ${latestTransition}"
+
+        def issueResponse = get("/rest/api/3/issue/${issueKey}?fields=issuetype,components,fixVersions")
+            .header('Content-Type', 'application/json')
+            .asObject(Map)
+
+        if (issueResponse.status == 200) {
+            def issueFields = issueResponse.body.fields
+            def issueType = issueFields.issuetype.name
+            def components = issueFields.components.name
+            def fixVersions = issueFields.fixVersions
+
+            if (["Story", "Task", "Bug"].contains(issueType) &&
+                !components.any { it in ["Android", "iOS", "Web", "Staff Platform", "Backend"] } &&
+                fixVersions.isEmpty()) {
+
+                def updateResponse = put("/rest/api/3/issue/${issueKey}")
+                    .header('Content-Type', 'application/json')
+                    .body([
+                        fields: [
+                            fixVersions: [
+                                [name: "N/A"]
+                            ]
+                        ]
+                    ])
+                    .asString()
+
+                if (updateResponse.status == 204) {
+                    logger.info "Successfully updated the 'Fix Version/s' field to 'N/A'."
+                } else {
+                    logger.error "Failed to update the 'Fix Version/s' field. Status code: ${updateResponse.status}"
+                }
+            } else {
+                logger.info "The issue does not match the specified JQL criteria."
+            }
+        } else {
+            logger.error "Failed to retrieve issue details. Status code: ${issueResponse.status}"
+        }
+    } else {
+        logger.info "No workflow status transition found in the changelog."
+    }
+} else {
+    logger.error "Failed to retrieve issue changelog. Status code: ${changelogResponse.status}"
+}
