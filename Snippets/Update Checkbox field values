@@ -1,0 +1,28 @@
+// Get the issue key from the current issue
+def issueKey = issue.key
+
+// Define the ID of the checkbox field to be updated
+def multiSelectFieldId = 'customfield_10242' // Replace 'customfield_10242' with your field ID
+
+// Define the new values for the multi-select field
+def selectedValues = [
+    [
+        "value": "ABC",
+    ],
+    [
+        "value": "DEF",
+    ]
+]
+
+// Prepare the API request to update the issue's multi-select field
+def result = put("/rest/api/2/issue/${issueKey}")
+    .header('Content-Type', 'application/json') // Set the content type header
+    .body([ // Define the body of the request
+        fields: [
+            (multiSelectFieldId): selectedValues // Set the value of the multi-select field
+        ]
+    ])
+    .asString() // Execute the request and get the response as a string
+
+// Optionally, you can log the result for debugging purposes
+log.debug("Response from Jira API: ${result}")
