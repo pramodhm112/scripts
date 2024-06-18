@@ -1,0 +1,23 @@
+// Get the key of the current issue
+def issueKey = issue.key
+logger.info("Issue Key: ${issueKey}")
+
+// Prepare and execute the API request to update the issue's custom field
+def updateResponse = put("/rest/api/3/issue/${issueKey}")
+    .queryString("overrideScreenSecurity", true) // Use boolean value directly
+    .header('Content-Type', 'application/json')
+    .body([
+        fields: [
+            "customfield_10005": [ // Replace 'customfield_10005' with the correct ID of your custom field
+                value: "Normal"
+            ]
+        ]
+    ])
+    .asString()
+
+// Check if the update was successful and log the result
+if (updateResponse.status == 204) {
+    logger.info("Updated the Issue")
+} else {
+    logger.error("Failed to update issue: ${updateResponse.status} - ${updateResponse.body}")
+}
