@@ -1,7 +1,7 @@
 // Get the issue key from the current issue
 def issueKey = issue.key
 
-// Define the ID of the checkbox field to be updated
+// Define the ID of the multi-select field to be updated
 def multiSelectFieldId = 'customfield_10242' // Replace 'customfield_10242' with your field ID
 
 // Define the new values for the multi-select field
