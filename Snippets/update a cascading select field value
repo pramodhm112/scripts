@@ -1,0 +1,26 @@
+// Get the issue key from the current issue
+def issueKey = issue.key
+
+// Define the ID of the cascading select field to be updated
+def cascadingFieldId = 'customfield_10107' // Replace 'customfield_10107' with your field ID
+
+// Define the new values for the cascading select field
+def selectedValues = [
+    "value": "Office",
+    "child": [
+        "value": "UK"
+    ]
+]
+
+// Prepare the API request to update the issue's cascading select field
+def result = put("/rest/api/2/issue/${issueKey}")
+    .header('Content-Type', 'application/json') // Set the content type header
+    .body([ // Define the body of the request
+        fields: [
+            (cascadingFieldId): selectedValues // Set the value of the cascading select field
+        ]
+    ])
+    .asString() // Execute the request and get the response as a string
+
+// Optionally, you can log the result for debugging purposes
+log.debug("Response from Jira API: ${result}")
