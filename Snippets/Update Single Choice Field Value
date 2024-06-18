@@ -1,0 +1,18 @@
+// Get the issue key from the current issue
+def issueKey = issue.key
+
+// Define the ID of the single choice field to be updated
+def selectListFieldId = 'customfield_10075' // Replace 'customfield_10075' with your field ID
+
+// Prepare the API request to update the issue's single choice field
+def result = put("/rest/api/2/issue/${issueKey}")
+    .header('Content-Type', 'application/json') // Set the content type header
+    .body([ // Define the body of the request
+        fields: [
+            (selectListFieldId): [value: "Normal"] // Set the value of the single choice field to required value
+        ]
+    ])
+    .asString() // Execute the request and get the response as a string
+
+// Optionally, you can log the result for debugging purposes
+log.debug("Response from Jira API: ${result}")
