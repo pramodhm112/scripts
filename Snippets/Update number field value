@@ -1,0 +1,21 @@
+// Get the issue key from the current issue
+def issueKey = issue.key
+
+// Define the ID of the number field to be updated
+def numberFieldId = 'customfield_10097' // Replace 'customfield_10097' with your field ID
+
+// Define the new value for the number field
+def selectedValue = 2000 // Replace this with the desired numeric value
+
+// Prepare the API request to update the issue's number field
+def result = put("/rest/api/2/issue/${issueKey}")
+    .header('Content-Type', 'application/json') // Set the content type header
+    .body([ // Define the body of the request
+        fields: [
+            (numberFieldId): selectedValue // Set the value of the number field
+        ]
+    ])
+    .asString() // Execute the request and get the response as a string
+
+// Optionally, you can log the result for debugging purposes
+log.debug("Response from Jira API: ${result}")
