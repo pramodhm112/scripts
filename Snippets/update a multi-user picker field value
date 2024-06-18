@@ -1,0 +1,28 @@
+// Get the issue key from the current issue
+def issueKey = issue.key
+
+// Define the ID of the multi-user picker field to be updated
+def multiUserPickerFieldId = 'customfield_10068' // Replace 'customfield_10068' with your field ID
+
+// Define the new values for the multi-user picker field
+def values = [
+    [
+        "accountId": "63060b97189e0a3a4ff283dc" // User 1's account ID
+    ],
+    [
+        "accountId": "630a0d15ec02b5f28b63a024" // User 2's account ID
+    ]
+]
+
+// Prepare the API request to update the issue's multi-user picker field
+def result = put("/rest/api/2/issue/${issueKey}")
+    .header('Content-Type', 'application/json') // Set the content type header
+    .body([ // Define the body of the request
+        fields: [
+            (multiUserPickerFieldId): values // Set the value of the multi-user picker field
+        ]
+    ])
+    .asString() // Execute the request and get the response as a string
+
+// Optionally, you can log the result for debugging purposes
+log.debug("Response from Jira API: ${result}")
