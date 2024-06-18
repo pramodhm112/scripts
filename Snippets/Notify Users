@@ -1,0 +1,25 @@
+// Get the key of the current issue
+def issueKey = issue.key
+
+// Prepare and execute the API request to notify users about the issue
+def resp = post("/rest/api/2/issue/${issueKey}/notify")
+    .header("Content-Type", "application/json")
+    .body([
+        subject: "Need to replace laptop - ${issueKey}",
+        htmlBody: "Battery is not working",
+        to: [
+            users: [
+                [
+                    accountId: '63060b97189e0a3a4f783dc' // Specify the account ID of the user to notify
+                ]
+            ]
+        ]
+    ])
+    .asString()
+
+// Check the response and log the result
+if (resp.status == 200) {
+    logger.info("Notification sent successfully")
+} else {
+    logger.error("Failed to send notification: ${resp.status} - ${resp.body}")
+}
