@@ -1,0 +1,18 @@
+// Get the key of the current issue
+def issueKey = issue.key
+
+// Define the account ID of the watcher
+def watcherAccountId = '6305b88c958ffd78c6e0e59e' // Use the account ID of the watcher
+
+// Prepare and execute the API request to add a watcher to the issue
+def result = post("/rest/api/3/issue/${issueKey}/watchers")
+    .header('Content-Type', 'application/json')
+    .body("\"${watcherAccountId}\"")
+    .asString()
+
+// Check the result and print the response
+if (result.status == 204) {
+    println("Watcher added successfully")
+} else {
+    println("Failed to add watcher: ${result.status} - ${result.body}")
+}
