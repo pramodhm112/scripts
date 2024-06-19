@@ -1,6 +1,13 @@
 // Get the key of the current issue
 def issueKey = issue.key
 
+/*
+https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-group-issues
+
+Use this link for comprehensive information on Jira REST API endpoints 
+to extend and customize your scripts for managing issues, comments, fields, and more.
+*/
+
 // Prepare and execute the API request to notify users about the issue
 def resp = post("/rest/api/2/issue/${issueKey}/notify")
     .header("Content-Type", "application/json")
