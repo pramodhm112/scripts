@@ -2,6 +2,13 @@
 def issueKey = issue.key
 logger.info("Issue Key: ${issueKey}")
 
+/*
+https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-group-issues
+
+Use this link for comprehensive information on Jira REST API endpoints 
+to extend and customize your scripts for managing issues, comments, fields, and more.
+*/
+
 // Prepare and execute the API request to update the issue's custom field
 def updateResponse = put("/rest/api/3/issue/${issueKey}")
     .queryString("overrideScreenSecurity", true) // Use boolean value directly
