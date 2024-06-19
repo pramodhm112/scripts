@@ -1,0 +1,31 @@
+import groovy.json.JsonBuilder
+
+// Get the key of the current issue
+def issueKey = issue.key
+
+// Get today's date
+def today = new Date()
+
+// Calculate the due date 90 days from today
+def dueDate = today + 90
+
+/*
+https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-group-issues
+
+Use this link for comprehensive information on Jira REST API endpoints 
+to extend and customize your scripts for managing issues, comments, fields, and more.
+*/
+
+// Prepare the API request to update the issue's due date
+def result = put("/rest/api/2/issue/${issueKey}")
+        .header('Content-Type', 'application/json')
+        .body([
+            fields: [
+                // Set the due date to 90 days from today's date
+                duedate: dueDate.format('yyyy-MM-dd') as String
+            ]
+        ])
+        .asString()
+
+// Print the result
+println("Response from Jira API: ${result}")
