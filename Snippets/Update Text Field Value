@@ -7,6 +7,13 @@ def textFieldId = 'customfield_10092' // Replace 'customfield_10092' with your f
 // Define the new value for the text field
 def selectedValues = "testtesting done"
 
+/*
+https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-group-issues
+
+Use this link for comprehensive information on Jira REST API endpoints 
+to extend and customize your scripts for managing issues, comments, fields, and more.
+*/
+
 // Prepare the API request to update the issue's text field
 def result = put("/rest/api/2/issue/${issueKey}")
     .header('Content-Type', 'application/json') // Set the content type header
