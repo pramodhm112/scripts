@@ -6,17 +6,12 @@ def commentText1 = """
 @user please add the requestor to the communication exclusion list
 https://docs.google.com/spreadsheets/d/1eefSoGzAJWH7tV9hxCjiaJ1Esn0vRBKybrpJTk/edit#gid=0
 """
-
 /*
 https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-group-issues
 
-This script uses the Jira REST API to interact with Jira issues. 
-By following this documentation, you can find more details about different endpoints 
-and their usage to extend the functionality of your scripts. This link provides comprehensive 
-information on how to use the Jira REST API to manage issues, comments, fields, and other related 
-tasks, making it easier to automate and customize Jira operations.
+Use this link for comprehensive information on Jira REST API endpoints 
+to extend and customize your scripts for managing issues, comments, fields, and more.
 */
-
 // Retrieve existing comments for the issue
 def commentsResult = get("/rest/api/2/issue/${issueKey}/comment")
     .header('Content-Type', 'application/json')
