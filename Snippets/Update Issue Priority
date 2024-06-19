@@ -1,0 +1,31 @@
+// Get the key of the current issue
+def issueKey = issue.key
+
+// Set the new priority name
+def newPriorityName = "High"
+
+/*
+https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-group-issues
+
+Use this link for comprehensive information on Jira REST API endpoints
+to extend and customize your scripts for managing issues, comments, fields, and more.
+*/
+
+// Prepare and execute the API request to update the issue's priority
+def result = put('/rest/api/2/issue/' + issueKey)
+    .header('Content-Type', 'application/json')
+    .body([
+        fields:[
+            priority: [
+                name: newPriorityName
+            ]
+        ]
+    ])
+    .asString()
+
+// Check the response status and print the result
+if (result.status == 204) {
+    println("Priority updated successfully.")
+} else {
+    println("Failed to update priority. Status: ${result.status}, Response: ${result.body}")
+}
