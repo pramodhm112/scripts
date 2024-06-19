@@ -4,6 +4,13 @@ def issueKey = issue.key
 // Define the ID of the single choice field to be updated
 def selectListFieldId = 'customfield_10075' // Replace 'customfield_10075' with your field ID
 
+/*
+https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-group-issues
+
+Use this link for comprehensive information on Jira REST API endpoints 
+to extend and customize your scripts for managing issues, comments, fields, and more.
+*/
+
 // Prepare the API request to update the issue's single choice field
 def result = put("/rest/api/2/issue/${issueKey}")
     .header('Content-Type', 'application/json') // Set the content type header
