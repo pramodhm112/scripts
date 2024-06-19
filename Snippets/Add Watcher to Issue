@@ -4,6 +4,13 @@ def issueKey = issue.key
 // Define the account ID of the watcher
 def watcherAccountId = '6305b88c958ffd78c6e0e59e' // Use the account ID of the watcher
 
+/*
+https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-group-issues
+
+Use this link for comprehensive information on Jira REST API endpoints 
+to extend and customize your scripts for managing issues, comments, fields, and more.
+*/
+
 // Prepare and execute the API request to add a watcher to the issue
 def result = post("/rest/api/3/issue/${issueKey}/watchers")
     .header('Content-Type', 'application/json')
