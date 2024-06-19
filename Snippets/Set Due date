@@ -7,6 +7,13 @@ def today = new Date()
 // Format today's date to 'yyyy-MM-dd' string format
 def formattedDate = today.format('yyyy-MM-dd')
 
+/*
+https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-group-issues
+
+Use this link for comprehensive information on Jira REST API endpoints 
+to extend and customize your scripts for managing issues, comments, fields, and more.
+*/
+
 // Prepare the API request to update the issue's due date
 def result = put("/rest/api/2/issue/${issueKey}")
     .header('Content-Type', 'application/json') // Set the content type header
