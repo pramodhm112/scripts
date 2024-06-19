@@ -1,0 +1,20 @@
+// Define the new description
+// If you want to include the existing Description, use this ${issue.fields.description}
+def newDescription = "${issue.fields.description} Updated by a script description"
+
+// Prepare and execute the API request to update the issue's description
+def result = put('/rest/api/2/issue/' + issueKey)
+        .header('Content-Type', 'application/json')
+        .body([
+            fields: [
+                description: newDescription
+            ]
+        ])
+        .asString()
+
+// Check the response status and return the appropriate message
+if (result.status == 204) {
+    return 'Success' // Return a success message if the update was successful
+} else {
+    return "${result.status}: ${result.body}" // Return the status code and body if the update failed
+}
