@@ -1,0 +1,26 @@
+// Define the new summary
+def newSummary = 'Updated by a script'
+
+/*
+https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-group-issues
+
+Use this link for comprehensive information on Jira REST API endpoints 
+to extend and customize your scripts for managing issues, comments, fields, and more.
+*/
+
+// Prepare and execute the API request to update the issue's summary
+def result = put('/rest/api/2/issue/' + issueKey)
+        .header('Content-Type', 'application/json')
+        .body([
+            fields: [
+                summary: newSummary
+            ]
+        ])
+        .asString()
+
+// Check the response status and return the appropriate message
+if (result.status == 204) {
+    return 'Success' // Return a success message if the update was successful
+} else {
+    return "${result.status}: ${result.body}" // Return the status code and body if the update failed
+}
