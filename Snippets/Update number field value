@@ -7,6 +7,13 @@ def numberFieldId = 'customfield_10097' // Replace 'customfield_10097' with your
 // Define the new value for the number field
 def selectedValue = 2000 // Replace this with the desired numeric value
 
+/*
+https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-group-issues
+
+Use this link for comprehensive information on Jira REST API endpoints 
+to extend and customize your scripts for managing issues, comments, fields, and more.
+*/
+
 // Prepare the API request to update the issue's number field
 def result = put("/rest/api/2/issue/${issueKey}")
     .header('Content-Type', 'application/json') // Set the content type header
