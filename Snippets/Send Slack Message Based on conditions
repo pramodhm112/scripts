@@ -1,0 +1,40 @@
+// Get the key of the current issue
+def issueKey = issue.key
+println("Issue Key: ${issueKey}")
+
+// Get the name of the request type (if available)
+def requestType = issue.fields.customfield_10010?.requestType?.name
+println("Request Type: ${requestType}")
+
+// Get labels of the current issue (if available)
+def labels = issue.fields.labels?.join(", ")
+println("Labels: ${labels}")
+
+// Check conditions: request type, absence of specific labels
+if (requestType == "Fix an account problem" && !labels.contains("test") && !labels.contains("fix")) {
+    println("Conditions met: Request type is 'Fix an account problem' and labels do not contain 'test' or 'fix'.")
+
+    // Define Slack webhook URL
+    def webhookUrl = 'https://hooks.slack.com/services/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'
+    println("Sending message to Slack webhook at: ${webhookUrl}")
+
+    // Construct message payload
+    def msg = [
+        text: """${sprintName} raised a ticket on PSO that we think should be handled by @bs2:
+        https://xyz.atlassian.net/servicedesk/customer/portal/20/${issueKey} - ${issue.fields.summary}"""
+    ]
+    println("Message Payload:")
+    println(msg)
+
+    // Make an HTTP POST request to the Slack webhook
+    def response = post(webhookUrl)
+        .header('Content-Type', 'application/json')
+        .body(msg)
+        .asString()
+
+    // Print the response from Slack
+    println("Response from Slack:")
+    println(response)
+} else {
+    println("Conditions not met: Skipping sending message to Slack.")
+}
