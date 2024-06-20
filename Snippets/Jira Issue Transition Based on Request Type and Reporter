@@ -1,0 +1,34 @@
+// Get the key of the current issue
+def issueKey = issue.key
+
+// Get the name of the request type (if available)
+def requestType = issue.fields.customfield_10010?.requestType?.name
+println("Request Type: ${requestType}")
+
+// Get the account ID of the reporter (if available)
+def reporter = issue.fields.reporter?.accountId
+
+// Check if the request type is "Fix an account problem" and reporter is not in a specific list of account IDs
+if (requestType == "Fix an account problem" && !["63176aa38d88ec800fbf9b17", "630a0d15ec02b5f28b63a024"].contains(reporter)) {
+
+    /*
+    Jira REST API documentation: 
+    https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-group-issues
+    */
+
+    // Perform transition action using Jira REST API
+    def transition = post("/rest/api/2/issue/${issueKey}/transitions")
+        .header("Content-Type", "application/json")
+        .body([transition: [id: 11]])
+        .asObject(Map)
+
+    // Check the transition response and print the result
+    if (transition.status == 200) {
+        println("Transition executed successfully for issue ${issueKey}.")
+    } else {
+        println("Failed to execute transition for issue ${issueKey}. Status: ${transition.status}, Response: ${transition.body}")
+    }
+} else {
+    // Print a message indicating that the condition was not met, hence skipping the action
+    println("Condition not met for issue ${issueKey}, skipping the transition action.")
+}
