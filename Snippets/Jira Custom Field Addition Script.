@@ -1,0 +1,24 @@
+// Retrieve issue key
+def issueKey = issue.key
+
+// Retrieve custom field values and convert them to doubles, handling null cases
+def num1 = issue.fields.customfield_10078?.value as Double ?: 0.0
+def num2 = issue.fields.customfield_10077?.value as Double ?: 0.0
+
+// Perform addition
+def sum = num1 + num2
+
+
+// Update the issue with the sum in another custom field
+def result = put("/rest/api/2/issue/${issueKey}")
+    .header('Content-Type', 'application/json')
+    .body([
+        fields: [
+            "customfield_10097": sum
+        ]
+    ])
+    .asString()  // Execute the request and get the response as a string
+
+// Print the result
+println("The sum of $num1 and $num2 is: $sum")
+println("API Response: $result")
