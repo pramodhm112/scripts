@@ -1,0 +1,32 @@
+// Jira Custom Field Division Script
+
+// Retrieve issue key
+def issueKey = issue.key
+
+// Retrieve custom field values and convert them to doubles, handling null cases
+def num1 = issue.fields.customfield_10078?.value as Double ?: 0.0
+def num2 = issue.fields.customfield_10077?.value as Double ?: 0.0
+
+// Perform division, handling division by zero
+def quotient = num2 != 0.0 ? num1 / num2 : 0.0
+
+/*
+https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-group-issues
+
+Use this link for comprehensive information on Jira REST API endpoints 
+to extend and customize your scripts for managing issues, comments, fields, and more.
+*/
+
+// Update the issue with the quotient in another custom field
+def result = put("/rest/api/2/issue/${issueKey}")
+    .header('Content-Type', 'application/json')
+    .body([
+        fields: [
+            "customfield_10097": quotient
+        ]
+    ])
+    .asString()  // Execute the request and get the response as a string
+
+// Print the result
+println("The quotient of $num1 divided by $num2 is: $quotient")
+println("API Response: $result")
