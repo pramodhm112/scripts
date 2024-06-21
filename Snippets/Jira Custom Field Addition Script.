@@ -8,6 +8,12 @@ def num2 = issue.fields.customfield_10077?.value as Double ?: 0.0
 // Perform addition
 def sum = num1 + num2
 
+/*
+https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-group-issues
+
+Use this link for comprehensive information on Jira REST API endpoints 
+to extend and customize your scripts for managing issues, comments, fields, and more.
+*/
 
 // Update the issue with the sum in another custom field
 def result = put("/rest/api/2/issue/${issueKey}")
