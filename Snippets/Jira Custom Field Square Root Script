@@ -1,0 +1,29 @@
+// Retrieve issue key
+def issueKey = issue.key
+
+// Retrieve custom field value and convert it to double, handling null case
+def num = issue.fields.customfield_10078?.value as Double ?: 0.0
+
+// Calculate square root
+def squareRoot = Math.sqrt(num)
+
+/*
+https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-group-issues
+
+Use this link for comprehensive information on Jira REST API endpoints 
+to extend and customize your scripts for managing issues, comments, fields, and more.
+*/
+
+// Update the issue with the square root in another custom field
+def result = put("/rest/api/2/issue/${issueKey}")
+    .header('Content-Type', 'application/json')
+    .body([
+        fields: [
+            "customfield_10097": squareRoot
+        ]
+    ])
+    .asString()  // Execute the request and get the response as a string
+
+// Print the result
+println("The square root of $num is: $squareRoot")
+println("API Response: $result")
