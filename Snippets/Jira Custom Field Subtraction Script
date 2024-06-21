@@ -1,0 +1,25 @@
+// Jira Custom Field Subtraction Script
+
+// Retrieve issue key
+def issueKey = issue.key
+
+// Retrieve custom field values and convert them to doubles, handling null cases
+def num1 = issue.fields.customfield_10078?.value as Double ?: 0.0
+def num2 = issue.fields.customfield_10077?.value as Double ?: 0.0
+
+// Perform subtraction
+def difference = num1 - num2
+
+// Update the issue with the difference in another custom field
+def result = put("/rest/api/2/issue/${issueKey}")
+    .header('Content-Type', 'application/json')
+    .body([
+        fields: [
+            "customfield_10097": difference
+        ]
+    ])
+    .asString()  // Execute the request and get the response as a string
+
+// Print the result
+println("The difference between $num1 and $num2 is: $difference")
+println("API Response: $result")
